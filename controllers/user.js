@@ -60,10 +60,28 @@ const deleteUser = async (req, res) => {
         return res.status(500).json({ success:false , message: "Internal server error." });
     }
 }
+const updateUser = async (req, res) => {
+    logger.info('Start User update - - -');
+    const _id = req.body._id;
+    delete req.body._id;
+    const {error, value} = Joi.validate(req.body, Validator.User);
+    if (error && error.details) {
+        logger.error(`Validate Error: ${error}`);
+        return res.json({success: false, message: `User Update Failed ${error}`});
+    }
+    try {
+       await User.findByIdAndUpdate({_id}, value).lean();
+        return res.status(200).json({success: true, message: 'User Update Completed'});
+    } catch(error) {
+        logger.error(`User Update Error: ${error}`);
+        return res.status(500).json({ success:false , message: "Internal server error." });
+    }
+}
 
 module.exports = {
     addUser,
     getUser,
-    deleteUser
+    deleteUser,
+    updateUser
 }
 	
