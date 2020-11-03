@@ -48,8 +48,22 @@ const getUser = async (req, res) => {
             return res.status(500).json({success: false, message: "Internal server error."});
         })
 }
+
+const deleteUser = async (req, res) => {
+    logger.info('Start User Delete - - -');
+    const params = req.params;
+    try {
+        await User.findByIdAndRemove({_id: params.id}).lean();
+        return res.status(200).json({success: true, message: 'Delete User Completed'});
+    } catch (error) {
+        logger.error(`User Delete Error: ${error}`);
+        return res.status(500).json({ success:false , message: "Internal server error." });
+    }
+}
+
 module.exports = {
     addUser,
-    getUser
+    getUser,
+    deleteUser
 }
 	
