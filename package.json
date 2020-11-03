@@ -4,8 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+  	"@hapi/joi": "^15.0.3",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.11",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0",
+  }
 }
