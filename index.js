@@ -25,6 +25,7 @@ app.use(express.urlencoded({extended: true}));
 
 const userController = require('./controllers/user');
 app.post('/api/user', userController.addUser);
+app.get('/api/user',userController.getUser);
 
 app.listen(3000, () => {
     console.log('server has benn started');

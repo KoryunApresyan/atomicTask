@@ -19,8 +19,37 @@ const addUser = (req, res) => {
         return res.json({success: true, message: 'User add Complete'});
     });
 }
+const getUser = async (req, res) => {
+    logger.info('Start getUser - - -');
+    const {skip, sortName, sortState, limit ,filter,role } = req.query;
+    const sortObj = {};
+    const search ={ $and: [
+            {  '$or': [
+        {'name'   : {'$regex': filter, "$options": "i"}},
+        {'surname': {'$regex': filter, "$options": "i"}},
+        {'email'  : {'$regex': filter, "$options": "i"}},
+        {'role'   : {'$regex': filter, "$options": "i"}},
 
+    ]}]};
+
+    if(role) search.$and.push({'role'   : { $in:[role]}});
+    sortObj[sortName] = sortState;
+
+    Promise.all([
+        User.find(search).sort(sortObj).skip(Number(skip)).limit(Number(limit)).lean(),
+        User.count(search).lean()
+    ])
+        .then(([ user, totalItem ]) => {
+            if (!user) return res.status(404).json({success: false, message: "Not Found"});
+            return res.status(200).json({success: true, message: 'All User', data: user, totalItem: totalItem});
+        })
+        .catch((error) => {
+            logger.error(`User GET Error: ${error}`);
+            return res.status(500).json({success: false, message: "Internal server error."});
+        })
+}
 module.exports = {
-    addUser
+    addUser,
+    getUser
 }
 	
