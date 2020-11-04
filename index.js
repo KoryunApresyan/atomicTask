@@ -29,6 +29,10 @@ app.get('/api/user',userController.getUser);
 app.put('/api/user', userController.updateUser);
 app.delete('/api/user/:id', userController.deleteUser);
 
+const Upload = require('./controllers/uploadFile');
+app.post('/api/user/fileupload', Upload.upload.single('file'), Upload.uploadFile);
+app.get('/api/user/getFile', Upload.openUploadFile);
+
 app.listen(3000, () => {
     console.log('server has benn started');
 })
